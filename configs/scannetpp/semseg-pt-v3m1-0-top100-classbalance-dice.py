@@ -52,6 +52,7 @@ model = dict(
     criteria=[
         dict(type="CrossEntropyLoss", weight=TOP100_CLASS_WEIGHT, loss_weight=1.0, ignore_index=-100),
         dict(type="LovaszLoss", mode="multiclass", loss_weight=1.0, ignore_index=-100),
+        dict(type="DiceLoss", loss_weight=1.0, ignore_index=-100),
     ],
 )
 
