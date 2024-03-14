@@ -107,8 +107,6 @@ class ScanNetPlusPlusDataset(Dataset):
         
         if "sampled_labels" in data.keys():
             segment = data["sampled_labels"]
-            # only scannet++ top100 clases - mask to ignore_index if not
-            segment[np.all((data['sampled_labels'][None] - self.top100_labels[:, None]) != 0, axis=0)] = self.ignore_index
         else:
             segment = np.ones(coord.shape[0]) * -1
         if "sampled_instance_labels" in data.keys():
