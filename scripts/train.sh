@@ -12,9 +12,12 @@ EXP_NAME=debug
 WEIGHT="None"
 RESUME=false
 GPU=None
+NUMMACHINE=1
+MRANK=0
+DIST="auto"
+NUMWORKERS=16
 
-
-while getopts "p:d:c:n:w:g:r:" opt; do
+while getopts "p:d:c:n:w:g:r:m:k:t:o" opt; do
   case $opt in
     p)
       PYTHON=$OPTARG
@@ -37,6 +40,18 @@ while getopts "p:d:c:n:w:g:r:" opt; do
     g)
       GPU=$OPTARG
       ;;
+    m)
+      NUMMACHINE=$OPTARG
+      ;;
+    k)
+      MRANK=$OPTARG
+      ;;
+    t)
+      DIST=&OPTARG
+      ;;
+    o)
+      NUMWORKERS=&OPTARG
+      ;;
     \?)
       echo "Invalid option: -$OPTARG"
       ;;
@@ -53,6 +68,9 @@ echo "Python interpreter dir: $PYTHON"
 echo "Dataset: $DATASET"
 echo "Config: $CONFIG"
 echo "GPU Num: $GPU"
+echo "Machine Num: $NUMMACHINE"
+echo "Machine Rank: $MRANK"
+echo "Dist url: $DIST"
 
 EXP_DIR=exp/${DATASET}/${EXP_NAME}
 MODEL_DIR=${EXP_DIR}/model
@@ -83,10 +101,16 @@ then
     $PYTHON "$CODE_DIR"/tools/$TRAIN_CODE \
     --config-file "$CONFIG_DIR" \
     --num-gpus "$GPU" \
-    --options save_path="$EXP_DIR"
+    --num-machines "$NUMMACHINE" \
+    --machine-rank "$MRANK" \
+    --dist-url "$DIST" \
+    --options save_path="$EXP_DIR" num_workers="$NUMWORKERS"
 else
     $PYTHON "$CODE_DIR"/tools/$TRAIN_CODE \
     --config-file "$CONFIG_DIR" \
     --num-gpus "$GPU" \
-    --options save_path="$EXP_DIR" resume="$RESUME" weight="$WEIGHT"
+    --num-machines "$NUMMACHINE" \
+    --machine-rank "$MRANK" \
+    --dist-url "$DIST" \
+    --options save_path="$EXP_DIR" num_workers="$NUMWORKERS" resume="$RESUME" weight="$WEIGHT"
 fi
