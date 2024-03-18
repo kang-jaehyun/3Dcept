@@ -176,7 +176,30 @@ class SemSegEvaluator(HookBase):
         m_acc = np.mean(acc_class)
         all_acc = sum(intersection) / (sum(target) + 1e-10)
         
-        if self.trainer.cfg.data.val.type == 'ScanNetPlusPlusDataset' and self.trainer.cfg.data.num_classes != 100:
+        if self.trainer.cfg.data.train.type =="ConcatDataset" and self.trainer.cfg.data.val.type == 'ScanNetPlusPlusDataset':
+            current_epoch = self.trainer.epoch + 1
+            for i in range(100):
+                self.trainer.logger.info(
+                    "Class_{idx}-{name} Result: iou/accuracy {iou:.4f}/{accuracy:.4f}".format(
+                        idx=i,
+                        name=self.trainer.cfg.data.names[i],
+                        iou=iou_class[i],
+                        accuracy=acc_class[i],
+                    )
+                )
+                if self.trainer.writer is not None:
+                    self.trainer.writer.add_scalar(f"val_class/IoU_{self.trainer.cfg.data.names[i]}", iou_class[i], current_epoch)
+        
+            if self.trainer.writer is not None:
+                self.trainer.writer.add_scalar("val/loss", loss_avg, current_epoch)
+                self.trainer.writer.add_scalar("val/mIoU", m_iou, current_epoch)
+                self.trainer.writer.add_scalar("val/mAcc", m_acc, current_epoch)
+                self.trainer.writer.add_scalar("val/allAcc", all_acc, current_epoch)
+            self.trainer.logger.info("<<<<<<<<<<<<<<<<< End Evaluation <<<<<<<<<<<<<<<<<")
+            self.trainer.comm_info["current_metric_value"] = m_iou  # save for saver
+            self.trainer.comm_info["current_metric_name"] = "mIoU"  # save for saver
+            
+        elif self.trainer.cfg.data.val.type == 'ScanNetPlusPlusDataset' and self.trainer.cfg.data.num_classes != 100:
             top100_ind = np.array(TOP100_CLASS_INDEX)
             top100_m_iou = np.mean(iou_class[top100_ind])
             top100_m_acc = np.mean(acc_class[top100_ind])
@@ -198,7 +221,7 @@ class SemSegEvaluator(HookBase):
                     )
                 )
                 if self.trainer.writer is not None:
-                    self.trainer.writer.add_scalar(f"val_class/IoU_{self.trainer.cfg.data.names[i]}", iou_class[i], current_epoch)
+                    self.trainer.writer.add_scalar(f"val_class/IoU_{self.trainer.cfg.data.names[ind]}", iou_class[ind], current_epoch)
                     
             if self.trainer.writer is not None:
                 self.trainer.writer.add_scalar("val/loss", loss_avg, current_epoch)
