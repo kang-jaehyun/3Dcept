@@ -50,8 +50,8 @@ model = dict(
         pdnorm_conditions=("ScanNet", "S3DIS", "Structured3D"),
     ),
     criteria=[
-        dict(type="FocalLoss", loss_weight=1.0, ignore_index=-100),
-        dict(type="LovaszLoss", mode="multiclass", loss_weight=1.0, ignore_index=-100),
+        dict(type="FocalLoss", loss_weight=1.0, ignore_index=-1),
+        dict(type="LovaszLoss", mode="multiclass", loss_weight=1.0, ignore_index=-1),
     ],
 )
 
@@ -75,7 +75,7 @@ data_root = "data/scannetpp"
 
 data = dict(
     num_classes=100,
-    ignore_index=-100,
+    ignore_index=-1,
     names=TOP100_CLASS_LABELS,
     train=dict(
         type=dataset_type,
