@@ -8,10 +8,15 @@ TEST_CODE=test.py
 DATASET=scannet
 CONFIG="None"
 EXP_NAME=debug
-WEIGHT=model_best
+WEIGHT="None"
+RESUME=false
 GPU=None
+NUMMACHINE=1
+MRANK=0
+DIST="auto"
+NUMWORKERS=16
 
-while getopts "p:d:c:n:w:g:" opt; do
+while getopts "p:d:c:n:w:r:g:m:k:t:o" opt; do
   case $opt in
     p)
       PYTHON=$OPTARG
@@ -28,8 +33,23 @@ while getopts "p:d:c:n:w:g:" opt; do
     w)
       WEIGHT=$OPTARG
       ;;
+    r)
+      RESUME=$OPTARG
+      ;;
     g)
       GPU=$OPTARG
+      ;;
+    m)
+      NUMMACHINE=$OPTARG
+      ;;
+    k)
+      MRANK=$OPTARG
+      ;;
+    t)
+      DIST=&OPTARG
+      ;;
+    o)
+      NUMWORKERS=&OPTARG
       ;;
     \?)
       echo "Invalid option: -$OPTARG"
@@ -45,12 +65,16 @@ fi
 echo "Experiment name: $EXP_NAME"
 echo "Python interpreter dir: $PYTHON"
 echo "Dataset: $DATASET"
+echo "Config: $CONFIG"
 echo "GPU Num: $GPU"
+echo "Machine Num: $NUMMACHINE"
+echo "Machine Rank: $MRANK"
+echo "Dist url: $DIST"
 
 EXP_DIR=exp/${DATASET}/${EXP_NAME}
 MODEL_DIR=${EXP_DIR}/model
 CODE_DIR=${EXP_DIR}/code
-CONFIG_DIR=${EXP_DIR}/config.py
+CONFIG_DIR=configs/${DATASET}/${CONFIG}.py
 
 if [ "${CONFIG}" = "None" ]
 then

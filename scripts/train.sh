@@ -17,7 +17,7 @@ MRANK=0
 DIST="auto"
 NUMWORKERS=16
 
-while getopts "p:d:c:n:w:g:r:m:k:t:o" opt; do
+while getopts "p:d:c:n:w:r:g:m:k:t:o" opt; do
   case $opt in
     p)
       PYTHON=$OPTARG
