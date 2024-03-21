@@ -130,6 +130,7 @@ class SemSegTester(TesterBase):
         if (
             self.cfg.data.test.type == "ScanNetDataset"
             or self.cfg.data.test.type == "ScanNet200Dataset"
+            or self.cfg.data.test.type == "ScanNetPlusPlusDataset"
         ) and comm.is_main_process():
             make_dirs(os.path.join(save_path, "submit"))
         elif (
@@ -246,6 +247,7 @@ class SemSegTester(TesterBase):
             if (
                 self.cfg.data.test.type == "ScanNetDataset"
                 or self.cfg.data.test.type == "ScanNet200Dataset"
+                or self.cfg.data.test.type == "ScanNetPlusPlusDataset"
             ):
                 np.savetxt(
                     os.path.join(save_path, "submit", "{}.txt".format(data_name)),

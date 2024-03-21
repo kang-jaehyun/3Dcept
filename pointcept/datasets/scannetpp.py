@@ -17,17 +17,14 @@ from pointcept.utils.logger import get_root_logger
 from pointcept.utils.cache import shared_dict
 from .builder import DATASETS
 from .transform import Compose, TRANSFORMS
-from .preprocessing.scannet.meta_data.scannet200_constants import (
-    VALID_CLASS_IDS_20,
-    VALID_CLASS_IDS_200,
-)
+
 from pointcept.datasets.preprocessing.scannet.meta_data.scannetpp_constants import (
     TOP100_CLASS_INDEX,
 )
 
 @DATASETS.register_module()
 class ScanNetPlusPlusDataset(Dataset):
-    class2id = np.array(VALID_CLASS_IDS_20)
+    class2id = np.arange(100)
 
     def __init__(
         self,
@@ -36,7 +33,7 @@ class ScanNetPlusPlusDataset(Dataset):
         transform=None,
         lr_file=None,
         la_file=None,
-        ignore_index=-100,
+        ignore_index=-1,
         test_mode=False,
         test_cfg=None,
         cache=False,
