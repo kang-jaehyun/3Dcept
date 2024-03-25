@@ -1,5 +1,5 @@
 from pointcept.datasets.preprocessing.scannet.meta_data.scannetpp_constants import (
-    CLASS_LABELS, TOP100_CLASS_LABELS
+    CLASS_LABELS, TOP100_CLASS_LABELS, TOP100_CLASS_WEIGHT
 )
 
 _base_ = ["../_base_/default_runtime.py"]
@@ -50,7 +50,8 @@ model = dict(
         pdnorm_conditions=("ScanNet", "S3DIS", "Structured3D"),
     ),
     criteria=[
-        dict(type="FocalLoss", loss_weight=1.0, ignore_index=-1),
+        dict(type="CrossEntropyLoss", loss_weight=1.0, ignore_index=-1),
+        dict(type="FocalLoss", loss_weight=1.0, weight=TOP100_CLASS_WEIGHT, ignore_index=-1),
         dict(type="LovaszLoss", mode="multiclass", loss_weight=1.0, ignore_index=-1),
     ],
 )
