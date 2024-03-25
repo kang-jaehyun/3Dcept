@@ -46,10 +46,10 @@ while getopts "p:d:c:n:w:r:g:m:k:t:o" opt; do
       MRANK=$OPTARG
       ;;
     t)
-      DIST=&OPTARG
+      DIST=$OPTARG
       ;;
     o)
-      NUMWORKERS=&OPTARG
+      NUMWORKERS=$OPTARG
       ;;
     \?)
       echo "Invalid option: -$OPTARG"

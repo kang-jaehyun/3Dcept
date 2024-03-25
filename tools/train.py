@@ -12,7 +12,7 @@ from pointcept.engines.defaults import (
 )
 from pointcept.engines.train import TRAINERS
 from pointcept.engines.launch import launch
-
+from datetime import timedelta
 
 def main_worker(cfg):
     cfg = default_setup(cfg)
@@ -30,6 +30,7 @@ def main():
         num_machines=args.num_machines,
         machine_rank=args.machine_rank,
         dist_url=args.dist_url,
+        timeout=timedelta(days=1, hours=0),
         cfg=(cfg,),
     )
 
